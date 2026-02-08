@@ -1,0 +1,108 @@
+/* 1. Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    padding: 20px;
+    align-items: center; /* Keeps everything centered */
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 2. Responsive Form Layout */
+form {
+    display: flex;
+    flex-direction: column; /* Stacks vertically on mobile */
+    align-items: center;
+    width: 100%;
+    max-width: 500px; /* Limits size on desktop */
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.b {
+    display: flex;
+    flex-direction: column; /* Stacked buttons for thumbs */
+    width: 100%;
+    gap: 15px;
+    align-items: center;
+}
+
+p {
+    font-size: 18px;
+    text-align: center;
+}
+
+/* 3. Button Styling */
+button {
+    border: none;
+    color: aliceblue;
+    background-color: blueviolet;
+    width: 100%; /* Full width on mobile */
+    height: 50px; /* Easy to tap */
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.add {
+    font-size: 30px;
+    background-color: #7b2cbf;
+}
+
+.s {
+    background-color: #5a189a;
+    font-weight: bold;
+}
+
+/* 4. Preview Section */
+#preview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+img {
+    width: 120px; /* Bigger thumbnails for mobile */
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.btn {
+    background-color: black;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+/* 5. Desktop Adjustments (Screens wider than 600px) */
+@media screen and (min-width: 600px) {
+    .b {
+        flex-direction: row; /* Go back to side-by-side */
+        justify-content: space-between;
+    }
+    
+    button {
+        width: 150px; /* Fixed width only on desktop */
+    }
+    
+    form {
+        margin-top: 50px;
+    }
+}

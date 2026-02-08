@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF</title>
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+</head>
+<body>
+
+<h2>Image to PDF</h2>
+
+<form id="uploadForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="file" id="fileInput" accept="image/*" multiple hidden>
+
+    <div class="b">
+        <p>Select Images:</p>
+        <button type="button" class="add" id="addBtn">+</button>
+        <button type="submit" class="s">Convert to PDF</button>
+    </div>
+</form>
+
+<div id="preview"></div>
+
+<script>
+let allFiles = [];
+
+const fileInput = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+const addBtn = document.getElementById("addBtn");
+const form = document.getElementById("uploadForm");
+
+/* get CSRF token */
+function getCSRFToken() {
+    return document.querySelector(
+        'input[name="csrfmiddlewaretoken"]'
+    ).value;
+}
+
+/* open file picker */
+addBtn.addEventListener("click", () => {
+    fileInput.click();
+});
+
+/* collect files */
+fileInput.addEventListener("change", () => {
+    for (let file of fileInput.files) {
+        allFiles.push(file);
+    }
+    fileInput.value = "";
+    showPreview();
+});
+
+/* preview + remove */
+function showPreview() {
+    preview.innerHTML = "";
+
+    allFiles.forEach((file, index) => {
+        const wrapper = document.createElement("div");
+        wrapper.style.position = "relative";
+        wrapper.style.display = "inline-block";
+
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "×";
+        removeBtn.className = "btn";
+        removeBtn.onclick = () => {
+            allFiles.splice(index, 1);
+            showPreview();
+        };
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(removeBtn);
+        preview.appendChild(wrapper);
+    });
+}
+
+/* submit via fetch */
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (allFiles.length === 0) return;
+
+    const formData = new FormData();
+    allFiles.forEach(file => {
+        formData.append("images", file);
+    });
+
+    fetch(form.action || window.location.href, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: formData
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        window.open(url);
+    });
+});
+</script>
+
+</body>
+</html>
